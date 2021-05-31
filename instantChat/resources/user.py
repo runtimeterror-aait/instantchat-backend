@@ -6,43 +6,22 @@ from instantChat.models.user import User as UserModel
 # project resources
 from instantChat.api.error import forbidden
 
-
-class UsersResource(Resource):
-
-    @jwt_required
-    def get(self) -> Response:
-        authorized: bool = UserModel.objects.get(id=get_jwt_identity())
-
-        if authorized:
-            output = UserModel.objects()
-            return jsonify({'result': output})
-        else:
-            return forbidden()
-
-    @jwt_required
-    def delete(self) -> Response:
-        authorized: bool = UserModel.objects.get(id=get_jwt_identity())
-
-        if authorized:
-            output = UserModel.objects.delete()
-            return jsonify({'result': output})
-        else:
-            return forbidden()
-
-
 class UserResource(Resource):
-    @jwt_required
+    @jwt_required()
     def get(self, user_id: str) -> Response:
 
         authorized: bool = UserModel.objects.get(id=get_jwt_identity())
 
         if authorized:
-            output = UserModel.objects.get(id=user_id)
-            return jsonify({'result': output})
+            if user_id == "self":
+                output = UserModel.objects.get(id=get_jwt_identity())
+            else:
+                output = UserModel.objects.get(id=user_id)
+            return jsonify({'data': output})
         else:
             return forbidden()
 
-    @jwt_required
+    @jwt_required()
     def put(self, user_id: str) -> Response:
 
         authorized: bool = UserModel.objects.get(id=get_jwt_identity())
@@ -55,7 +34,7 @@ class UserResource(Resource):
         else:
             return forbidden()
 
-    @jwt_required
+    @jwt_required()
     def post(self) -> Response:
         authorized: bool = UserModel.objects.get(id=get_jwt_identity())
 
@@ -67,7 +46,7 @@ class UserResource(Resource):
         else:
             return forbidden()
 
-    @jwt_required
+    @jwt_required()
     def delete(self, user_id: str) -> Response:
         authorized: bool = UserModel.objects.get(id=get_jwt_identity())
 
