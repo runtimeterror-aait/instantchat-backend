@@ -1,7 +1,6 @@
 from flask import Response, request, jsonify
 from flask_restful import Resource, abort, reqparse
-from flask_jwt_extended import create_access_token, create_refresh_token
-
+from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity
 from instantChat.models.user import User as UserModel
 from instantChat.models.token import Token as TokenModel
 from instantChat.api.error import unauthorized
@@ -42,3 +41,10 @@ class LoginApi(Resource):
             else:
                 return jsonify({'error': "Error Adding Token"})
 
+class LogoutApi(Resource):
+    @jwt_required()
+    def get(self) -> Response:
+        user = UserModel.objects.get(id=get_jwt_identity())
+        token = TokenModel.objects.get(user=user)
+
+        return jsonify({'data': token})
