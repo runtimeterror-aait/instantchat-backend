@@ -27,7 +27,7 @@ class LoginApi(Resource):
         if not auth_success:
             return unauthorized()
         else:
-            expiry = datetime.timedelta(days=5)
+            expiry = datetime.timedelta(days=10)
             access_token = create_access_token(identity=str(user.id), expires_delta=expiry)
             refresh_token = create_refresh_token(identity=str(user.id))
             return jsonify({'result': {'access_token': access_token,
