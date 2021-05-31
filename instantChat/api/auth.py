@@ -3,6 +3,7 @@ from flask_restful import Resource, abort, reqparse
 from flask_jwt_extended import create_access_token, create_refresh_token
 
 from instantChat.models.user import User as UserModel
+from instantChat.models.token import Token as TokenModel
 from instantChat.api.error import unauthorized
 
 import datetime
@@ -22,15 +23,22 @@ class LoginApi(Resource):
     @staticmethod
     def post() -> Response:
         data = request.get_json()
-        user = UserModel.objects.get(email=data.get('email'))
-        auth_success = user.check_pw_hash(data.get('password'))
+        try:
+            user = UserModel.objects.get(email=data.get('email'))
+            auth_success = user.check_pw_hash(data.get('password'))
+        except:
+            auth_success = False
         if not auth_success:
             return unauthorized()
         else:
             expiry = datetime.timedelta(days=10)
             access_token = create_access_token(identity=str(user.id), expires_delta=expiry)
             refresh_token = create_refresh_token(identity=str(user.id))
-            return jsonify({'result': {'access_token': access_token,
+            newToken = TokenModel(token=access_token, refreshToken=refresh_token, user=user)
+            if newToken.save():
+                return jsonify({'result': {'access_token': access_token,
                                        'refresh_token': refresh_token,
                                        'logged_in_as': f"{user.email}"}})
+            else:
+                return jsonify({'error': "Error Adding Token"})
 
