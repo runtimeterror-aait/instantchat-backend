@@ -46,5 +46,5 @@ class LogoutApi(Resource):
     def get(self) -> Response:
         user = UserModel.objects.get(id=get_jwt_identity())
         token = TokenModel.objects.get(user=user)
-
+        #  _revoke_current_token()()
         return jsonify({'data': token})
