@@ -1,7 +1,7 @@
 
 from mongoengine import Document, EmbeddedDocument
 from mongoengine.fields import *
-
+from flask import jsonify
 from flask_bcrypt import generate_password_hash, check_password_hash
 
 import re
@@ -14,6 +14,7 @@ class PhoneField(StringField):
     def validate(self, value):
         # Overwrite StringField validate method to include regex phone number check.
         if not PhoneField.REGEX.match(string=value):
+            return jsonify({"error": f"ERROR: `{value}` Is An Invalid Phone Number."})
             self.error(f"ERROR: `{value}` Is An Invalid Phone Number.")
         super(PhoneField, self).validate(value=value)
 
@@ -23,8 +24,9 @@ class UserPhotos(EmbeddedDocument):
     profilePicture = BooleanField(default=False)
 
 class Contacts(EmbeddedDocument):
+    id = SequenceField()
     name = StringField(required=True);
-    phone = PhoneField(required=True);
+    phone = PhoneField(required=True,unique=True);
 
 class User(Document):
     username = StringField(required=True, unique=True)

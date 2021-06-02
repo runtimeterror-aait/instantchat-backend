@@ -12,9 +12,6 @@ def create_app(test_config=None):
     #     'db': 'instantChat',
     #     'host': 'localhost',
     #     'port': 27017,
-    #     # 'username': 'admin',
-    #     # 'password': 'password',
-    #     # 'authentication_source': 'admin'
     # },
     # 'JWT_SECRET_KEY': 'instantChatKey'
     # }
