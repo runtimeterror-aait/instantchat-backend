@@ -8,13 +8,15 @@ from instantChat.models.user import User as UserModel, Contacts
 from instantChat.api.error import forbidden
 
 from instantChat.api.includes import searchIndex
+
+
 class ContactsResource(Resource):
     @jwt_required()
     def get(self) -> Response:
         authUser = UserModel.objects.get(id=get_jwt_identity())
         contacts = authUser.contacts
         return jsonify({'data': contacts})
-    
+
     @jwt_required()
     def post(self) -> Response:
         data = request.get_json()
@@ -31,26 +33,34 @@ class ContactResource(Resource):
         contacts = UserModel.objects.get(id=get_jwt_identity()).contacts
         for contact in contacts:
             if str(contact.id) == contact_id:
-                return jsonify({'data':contact})
-            else:
-                return jsonify({'data': "contact doesn't exist"}) 
-                
+                return jsonify({'data': contact})
+        
+        return jsonify({'message': "contact doesn't exist"})
+
     @jwt_required()
     def put(self, contact_id: str) -> Response:
 
         data = request.get_json()
-        user = UserModel.objects.get(id=get_jwt_identity(), contacts__id=contact_id)
-        put_user = user.contacts.objects(id=contact_id).update(**data)
+        user = UserModel.objects.get(id=get_jwt_identity())
 
-        return jsonify({'result': put_user})
-        #  post = Post.objects.get(title="Quora rocks", comments__name="john").update(set__comment__S__name="John)
+        for i in range(0, len(user.contacts)):
+            if str(user.contacts[i].id) == contact_id:
+                user.contacts[i].name = data['name']
+                user.contacts[i].phone = data['phone']
+                user.save()
+                return jsonify({'message': 'Contact updated'})
+        return jsonify({'message': 'Contact doesn\'t exist'})
+
 
     @jwt_required()
     def delete(self, user_id: str) -> Response:
-        user = Users.objects.get(id=get_jwt_identity()).access.admin
+        data = request.get_json()
+        user = UserModel.objects.get(id=get_jwt_identity())
 
-        if authorized:
-            output = Meals.objects(id=user_id).delete()
-            return jsonify({'result': output})
-        else:
-            return forbidden()
+        for i in range(0, len(user.contacts)):
+            if str(user.contacts[i].id) == contact_id:
+                user.contacts[i].name = data['name']
+                user.contacts[i].phone = data['phone']
+                user.save()
+                return jsonify({'message': 'Contact updated'})
+        return jsonify({'message': 'Contact doesn\'t exist'})
