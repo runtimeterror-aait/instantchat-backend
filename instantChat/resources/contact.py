@@ -53,14 +53,12 @@ class ContactResource(Resource):
 
 
     @jwt_required()
-    def delete(self, user_id: str) -> Response:
-        data = request.get_json()
+    def delete(self, contact_id: str) -> Response:
         user = UserModel.objects.get(id=get_jwt_identity())
 
         for i in range(0, len(user.contacts)):
             if str(user.contacts[i].id) == contact_id:
-                user.contacts[i].name = data['name']
-                user.contacts[i].phone = data['phone']
+                del user.contacts[i]
                 user.save()
-                return jsonify({'message': 'Contact updated'})
+                return jsonify({'message': 'Contact Deleted'})
         return jsonify({'message': 'Contact doesn\'t exist'})
