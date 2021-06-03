@@ -41,3 +41,10 @@ class messages(Resource):
         textmessage = TextMessage.objects(id=message_id)
         textmessage.update(**data)
         return jsonify({'data': user_message.textmessage})
+
+    @jwt_required
+    def delete(self, message_id: str) -> Response:
+        authUser = Usermessage.objects.get(id=get_jwt_identity())
+        delete_message = Usermessage.objects(id=message_id)
+        delete_message.delete()
+        return jsonify({'data': delete_message})
