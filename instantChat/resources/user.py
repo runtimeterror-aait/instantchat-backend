@@ -9,17 +9,12 @@ from instantChat.api.error import forbidden
 class UserResource(Resource):
     @jwt_required()
     def get(self, user_id: str) -> Response:
-
-        authorized: bool = UserModel.objects.get(id=get_jwt_identity())
-
-        if authorized:
-            if user_id == "self":
-                output = UserModel.objects.get(id=get_jwt_identity())
-            else:
-                output = UserModel.objects.get(id=user_id)
-            return jsonify({'data': output})
+        if user_id == "self":
+            output = UserModel.objects.get(id=get_jwt_identity())
         else:
-            return forbidden()
+            output = UserModel.objects.get(id=user_id)
+        return jsonify({'data': output})
+        
 
     @jwt_required()
     def put(self, user_id: str) -> Response:

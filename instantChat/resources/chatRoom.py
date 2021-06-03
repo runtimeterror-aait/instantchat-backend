@@ -10,10 +10,10 @@ from instantChat.api.error import forbidden
 class ChatRooms(Resource):
     #all chatRooms
     @jwt_required()
-    def get(self, page) -> Response:
-        #paginated
-        chatRooms = ChatRoomModel.objects.paginate(page=page, per_page=10)
-
+    def get(self) -> Response:
+        chatRooms = ChatRoomModel.objects
+        return jsonify({'data': chatRooms})
+        
     @jwt_required()
     def post(self) -> Response:
         
@@ -31,6 +31,13 @@ class ChatRooms(Resource):
         newChatRoom.save()
         return jsonify({"data": newChatRoom})
 
-    @jwt_required()
+    # @jwt_required()
+
 class ChatRoom(Resource):
-    pass
+    @jwt_required()
+    def get(self, chat_room_id) -> Response:
+        chatRoom = ChatRoomModel.objects.get(id=chat_room_id)
+        return jsonify({'data': chatRoom})
+
+    
+    

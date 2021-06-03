@@ -3,7 +3,6 @@ from mongoengine import *
 from flask import jsonify
 from mongoengine.fields import ListField
 from instantChat.models.user import User
-from instantChat.models.message import Message
 
 class ChatRoom(Document):
     name = StringField() #chat room name 

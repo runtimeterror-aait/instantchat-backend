@@ -6,7 +6,8 @@ from instantChat.models.chatRoom import ChatRoom
 
 
 class Message(Document):
-    sender = ReferenceField(User)
+    sender = ReferenceField(User, required=True)
+    receiver = ReferenceField(User)
     chatRoom = ReferenceField(ChatRoom)
     meta = {'allow_inheritance': True}
 
