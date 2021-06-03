@@ -48,3 +48,12 @@ class messages(Resource):
         delete_message = Usermessage.objects(id=message_id)
         delete_message.delete()
         return jsonify({'data': delete_message})
+        
+
+class message(Resource):
+    @jwt_required()
+    def get(self, individual_id) -> Response:
+        messages = Usermessage.objects.get(id=individual_id)
+        return jsonify({'data': messages})
+
+ 
