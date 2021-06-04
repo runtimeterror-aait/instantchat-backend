@@ -34,7 +34,7 @@ class ContactResource(Resource):
         for contact in contacts:
             if str(contact.id) == contact_id:
                 return jsonify({'data': contact})
-        
+
         return jsonify({'message': "contact doesn't exist"})
 
     @jwt_required()
@@ -50,7 +50,6 @@ class ContactResource(Resource):
                 user.save()
                 return jsonify({'message': 'Contact updated'})
         return jsonify({'message': 'Contact doesn\'t exist'})
-
 
     @jwt_required()
     def delete(self, contact_id: str) -> Response:
