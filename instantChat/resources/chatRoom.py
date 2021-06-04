@@ -41,6 +41,19 @@ class ChatRoom(Resource):
         chatRoom = ChatRoomModel.objects.get(id=chat_room_id)
         return jsonify({'data': chatRoom})
 
+    # //add users
+    @jwt_required()
+    def post(self, chat_room_id) -> Response:
+        data = request.get_json()
+        newMembersList = [UserModel.objects(
+            id=userId) for userId in data.members]
+
+        for member in newMembersList:
+            if ChatRoomModel.objects.get(id=chat_room_id, members=member).count() == 0:
+                chatRoom.objects.get(id=chat_room_id).members.append(member)
+
+        return jsonify({"message": "New members has been added"})
+
     @jwt_required()
     def put(self, chat_room_id) -> Response:
         data = request.get_json()
@@ -63,8 +76,9 @@ class ChatRoom(Resource):
         else:
             return jsonify({"data": "you are not the owner of this chat room"})
 
+
 class PopularChatRoom(Resource):
     @jwt_required()
     def get(self) -> Response:
-        chatRoom = ChatRoomModel.objects
+        chatRoom = ChatRoomModel.objects.order_by("members").members[:6]
         return jsonify({"data": chatRoom})
