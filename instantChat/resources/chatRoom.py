@@ -20,10 +20,11 @@ class ChatRooms(Resource):
 
         user = UserModel.objects.get(id=get_jwt_identity())
         data = request.get_json()
-        membersList = [UserModel.objects(id=userId) for userId in data.members]
+        membersList = [UserModel.objects(id=userId) for userId in data["members"]][0]
+        
         new = {
             "name": data["name"],
-            "description"PopularChatRoom: data["description"],
+            "description": data["description"],
             "owner": user,
             "members": membersList,
             "privateMessaging": bool(data["privateMessaging"])
@@ -38,7 +39,10 @@ class ChatRooms(Resource):
 class ChatRoom(Resource):
     @jwt_required()
     def get(self, chat_room_id) -> Response:
-        chatRoom = ChatRoomModel.objects.get(id=chat_room_id)
+        try:
+            chatRoom = ChatRoomModel.objects.get(id=chat_room_id)
+        except:
+            return jsonify({'message': "No chat room be the first to create one"})
         return jsonify({'data': chatRoom})
 
     # //add users
@@ -57,7 +61,7 @@ class ChatRoom(Resource):
     @jwt_required()
     def put(self, chat_room_id) -> Response:
         data = request.get_json()
-        loggedInUser = get_jwt_identity()
+        loggedInUser = UserModel.objects.get(id=get_jwt_identity())
         chatRoom = ChatRoomModel.objects.get(id=chat_room_id)
         if chatRoom.owner == loggedInUser:
             chatRoom.update(**data)
@@ -68,7 +72,7 @@ class ChatRoom(Resource):
 
     @jwt_required()
     def delete(self, chat_room_id) -> Response:
-        loggedInUser = get_jwt_identity()
+        loggedInUser = UserModel.objects.get(id=get_jwt_identity())
         chatRoom = ChatRoomModel.objects.get(id=chat_room_id)
         if chatRoom.owner == loggedInUser:
             chatRoom.delete()
