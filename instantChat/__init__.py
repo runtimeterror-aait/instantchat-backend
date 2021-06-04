@@ -3,9 +3,12 @@ from flask import Flask
 from flask_jwt_extended import JWTManager
 from flask_mongoengine import MongoEngine
 
+app = Flask(__name__, instance_relative_config=True)
+
+
 def create_app(test_config=None):
 
-    app = Flask(__name__, instance_relative_config=True)
+    # app = Flask(__name__, instance_relative_config=True)
 
     # config = {
     # 'MONGODB_SETTINGS': {
@@ -47,3 +50,4 @@ def create_app(test_config=None):
         
     return app
 
+create_app()

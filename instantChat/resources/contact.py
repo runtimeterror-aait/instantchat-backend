@@ -62,3 +62,21 @@ class ContactResource(Resource):
                 user.save()
                 return jsonify({'message': 'Contact Deleted'})
         return jsonify({'message': 'Contact doesn\'t exist'})
+
+
+class SearchContacts(Resource):
+    # @jwt_required()
+    def get(self, search_term):
+        all_cont = [
+            {"id":"234567342234tas", "name":"dawit bezabih", "phone": "098231324"},
+            {"id":"4353tsdgfd34tas", "name": "michael belete", "phone": "092345623"},
+            {"id":"234sdflei2a4tas", "name": "naol dame", "phone": "098134423"}
+        ]
+        # all_cont = UserModel.objects.get(id=get_jwt_identity()).contacts
+        new_cont = []
+        for p in all_cont:
+            if search_term in p["name"] or search_term in p["phone"]:
+                new_cont.append(p)
+        if not new_cont:
+            return "OOps!"
+        return new_cont
