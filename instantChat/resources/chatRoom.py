@@ -33,7 +33,6 @@ class ChatRooms(Resource):
         newChatRoom.save()
         return jsonify({"data": newChatRoom})
 
-    # @jwt_required()
 
 
 class ChatRoom(Resource):
