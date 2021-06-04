@@ -81,3 +81,23 @@ class SearchContacts(Resource):
         if not new_cont:
             return "OOps!"
         return jsonify(new_cont)
+
+class SearchChatRooms(Resource):
+    @jwt_required()
+    def get(self, search_room):
+        all_room = [
+            {"id":"some id 1", "name":"IT Group", "date_created":"who cares"},
+            {"id":"some id 2", "name":"Software Engineering", "date_created":"who cares"},
+            {"id":"some id 3", "name":"Ethio Online Shopping", "date_created":"who cares"},
+            {"id":"some id 4", "name":"Ali Express", "date_created":"who cares"},
+            {"id":"some id 5", "name":"Buna vs Giorgis", "date_created":"who cares"}
+        ]
+        new_room = []
+        for room in all_room:
+            if search_room.lower() in room["name"].lower():
+                new_room.append(room)
+        if not new_room:
+            return "Oops!"
+        return jsonify(new_room)
+
+        return 0
