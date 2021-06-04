@@ -9,7 +9,7 @@ from flask_restful import Api
 from instantChat.api.auth import SignUpApi, LoginApi
 from instantChat.resources.user import UserResource
 from instantChat.resources.contact import ContactsResource, ContactResource
-from instantChat.resources.chatRoom import ChatRooms, ChatRoom
+from instantChat.resources.chatRoom import ChatRooms, ChatRoom, PopularChatRoom
 bp = Blueprint("routes", __name__, url_prefix="/v1/api")
 api = Api(bp)
 
@@ -21,3 +21,4 @@ api.add_resource(ContactsResource, '/contacts')
 api.add_resource(ContactResource, '/contact/<contact_id>')
 api.add_resource(ChatRooms, '/chatRooms')
 api.add_resource(ChatRoom, '/chatRooms/<chat_room_id>')
+api.add_resource(PopularChatRoom, '/chatRooms/popular')
