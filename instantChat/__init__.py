@@ -42,7 +42,8 @@ def create_app(test_config=None):
     app.add_url_rule('/', endpoint='index')
 
     @app.route("/")
-    def hello():
+    # def hello():
+    def index():
         return "hello, world"
         
     return app
