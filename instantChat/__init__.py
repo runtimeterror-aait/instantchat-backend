@@ -94,8 +94,9 @@ def create_app(test_config=None):
         
     @socket.on('offline')
     def online(data):
+        #db here... last seen (like UPDATE TABLE USERS COLUMN lastSeen to 'timestamp')
         for contact in data.conids: #also in front end #fnd
-            emit('userOffline', data.userid, to = contact)
+            emit('userOffline', {"userid": data.userid, "lastSeen": data.lastSeen}, to = contact)
 
 
 
