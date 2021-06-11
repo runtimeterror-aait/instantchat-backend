@@ -3,6 +3,7 @@ from mongoengine import Document, EmbeddedDocument
 from mongoengine.fields import *
 from flask import jsonify
 from flask_bcrypt import generate_password_hash, check_password_hash
+from flask_mongoengine import BaseQuerySet
 
 import re
 
@@ -38,7 +39,8 @@ class User(Document):
     deactivate = BooleanField()
     profilePicture = ListField(EmbeddedDocumentField(UserPhotos))
     contacts = ListField(EmbeddedDocumentField(Contacts))
-    
+    meta = {'queryset_class': BaseQuerySet}
+
     def generate_pw_hash(self):
         self.password = generate_password_hash(
             password=self.password).decode('utf-8')

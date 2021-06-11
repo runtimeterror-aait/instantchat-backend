@@ -32,7 +32,7 @@ class ContactResource(Resource):
     def get(self, contact_id) -> Response:
         contacts = UserModel.objects.get(id=get_jwt_identity()).contacts
         for contact in contacts:
-            if str(contact.id) == contact_id:
+            if str(contact.id) == contact_id: #why not just query it with the db - ...contacts.Objects.get...? #mk
                 return jsonify({'data': contact})
 
         return jsonify({'message': "contact doesn't exist"})

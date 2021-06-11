@@ -1,3 +1,4 @@
+test.rest
 venv/
 *.pyc
 __pycache__/

@@ -27,3 +27,11 @@ def invalid_route() -> Response:
     resp = jsonify({'result': output})
     resp.status_code = 404
     return resp
+
+def bad_input() -> Response:
+    output = {"error":
+              {"message": "400 error: Bad input."}
+              }
+    resp = jsonify({'result': output})
+    resp.status_code = 400
+    return resp

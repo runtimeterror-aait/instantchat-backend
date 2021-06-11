@@ -20,7 +20,7 @@ class ChatRooms(Resource):
 
         user = UserModel.objects.get(id=get_jwt_identity())
         data = request.get_json()
-        membersList = [UserModel.objects(id=userId) for userId in data["members"]][0]
+        membersList = [UserModel.objects(id=userId) for userId in data["members"]][0] #//whhy [0]? #mk
         
         new = {
             "name": data["name"],

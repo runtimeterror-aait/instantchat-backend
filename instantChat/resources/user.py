@@ -8,14 +8,14 @@ from instantChat.api.error import forbidden
 
 
 class UserResource(Resource):
-    @jwt_required()
+    # @jwt_required()
     def get(self, user_id: str) -> Response:
         if user_id == "self":
-            output = UserModel.objects.get(id=get_jwt_identity())
+            output = UserModel.objects.get_or_404(id=get_jwt_identity())
         else:
-            output = UserModel.objects.get(phone=user_id)
+            output = UserModel.objects.get_or_404(phone=user_id)
             if output.count() == 0:
-                output = UserModel.objects.get(id=user_id)
+                output = UserModel.objects.get_or_404(id=user_id)
                 return jsonify({'data': output})
         return jsonify({'data': output})
 
@@ -29,11 +29,11 @@ class UserResource(Resource):
     @jwt_required()
     def post(self) -> Response:
         data = request.get_json()
-        post_user = UserModel(**data).save()
+        post_user = UserModel(**data).save() #created a user? by a logged in user? #mk
         output = {'id': str(post_user.id)}
         return jsonify({'result': output})
 
     @jwt_required()
     def delete(self, user_id: str) -> Response:
-        output = UserModel.objects(id=user_id).delete()
+        output = UserModel.objects(id=user_id).delete() #delete any user? by a logged in user? #mk
         return jsonify({'result': output})

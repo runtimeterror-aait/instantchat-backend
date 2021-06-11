@@ -4,6 +4,8 @@ from flask import Flask
 from flask_jwt_extended import JWTManager
 from flask_mongoengine import MongoEngine
 
+from secrets import token_urlsafe
+
 import time
 from flask_socketio import SocketIO, close_room, join_room, leave_room, emit
 
@@ -27,6 +29,7 @@ def create_app(test_config=None):
         'host': 'mongodb://ullxngscsr8pmavwdoia:seAjYXu2i8x5MJrCRAyg@bmbni9iduxoifkf-mongodb.services.clever-cloud.com:27017/bmbni9iduxoifkf',
     },
     'JWT_SECRET_KEY': 'instantChatKey'
+    # 'JWT_SECRET_KEY': token_urlsafe(16) #later
     }
     app.config.update(config)
 
@@ -37,9 +40,9 @@ def create_app(test_config=None):
     if 'JWT_SECRET_KEY' in os.environ:
         app.config['JWT_SECRET_KEY'] = os.environ['JWT_SECRET_KEY']
 
-    db = MongoEngine(app)
+    db = MongoEngine(app) #mk
 
-    jwt = JWTManager(app)
+    jwt = JWTManager(app) #mk
     
     from instantChat.api import routes
 
@@ -59,7 +62,7 @@ def create_app(test_config=None):
         recentMessages = {}; #db fetch... here #tbd
         emit('recentMessages', recentMessages, brodcast = False, include_self = True); #include_self #tbch
 
-    @socket.on('getlastMessages'):
+    @socket.on('getlastMessages')
     def lastMessages(chatid):
         lastMessages = {}; #db fetch... here #tbd
         emit('lastMessages', lastMessages, brodcast = False, include_self = True); #tbcheck
