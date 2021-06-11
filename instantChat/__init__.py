@@ -1,10 +1,11 @@
 import os
+from re import S
 from flask import Flask
 from flask_jwt_extended import JWTManager
 from flask_mongoengine import MongoEngine
 
 import time
-from flask_socketio import SocketIO, join_room, leave_room, emit
+from flask_socketio import SocketIO, close_room, join_room, leave_room, emit
 
 def create_app(test_config=None):
 
@@ -56,8 +57,14 @@ def create_app(test_config=None):
     @socket.on('connect')
     def connect():
         recentMessages = {}; #db fetch... here #tbd
-        emit('recentMessages', recentMessages, brodcast = False, include_self = True); #include_self
+        emit('recentMessages', recentMessages, brodcast = False, include_self = True); #include_self #tbch
 
+    @socket.on('getlastMessages'):
+    def lastMessages(chatid):
+        lastMessages = {}; #db fetch... here #tbd
+        emit('lastMessages', lastMessages, brodcast = False, include_self = True); #tbcheck
+
+    
 
 
     ##################################################################################################
