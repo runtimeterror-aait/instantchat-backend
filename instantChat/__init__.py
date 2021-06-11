@@ -84,6 +84,21 @@ def create_app(test_config=None):
         emit('messageDeleted', data, to = data.chatid)
 
 
+
+
+    
+    @socket.on('online')
+    def online(data):
+        for contact in data.conids: #also in front end #fnd
+            emit('userOnline', data.userid, to = contact)
+        
+    @socket.on('offline')
+    def online(data):
+        for contact in data.conids: #also in front end #fnd
+            emit('userOffline', data.userid, to = contact)
+
+
+
     ##################################################################################################
 
     
