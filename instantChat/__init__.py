@@ -78,6 +78,10 @@ def create_app(test_config=None):
         emit('chatDeleted', data.chatid, to = data.chatid)   
         close_room(data.chatid);
 
+    @socket.on('deleteMessage')
+    def deleteMessage(data):
+        #db here...
+        emit('messageDeleted', data, to = data.chatid)
 
 
     ##################################################################################################
