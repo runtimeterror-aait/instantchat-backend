@@ -68,7 +68,16 @@ def create_app(test_config=None):
     def sendMessage(msg):
         #db here... add message
         emit('message', msg, to = msg.room);
-    
+
+
+    @socket.on('deleteChat') #haven't included callback
+    def deleteChat(data):
+        #db here...
+        
+        #if succesful
+        emit('chatDeleted', data.chatid, to = data.chatid)   
+        close_room(data.chatid);
+
 
 
     ##################################################################################################
