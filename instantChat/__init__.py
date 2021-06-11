@@ -3,9 +3,14 @@ from flask import Flask
 from flask_jwt_extended import JWTManager
 from flask_mongoengine import MongoEngine
 
+import time
+from flask_socketio import SocketIO, join_room, leave_room, emit
+
 def create_app(test_config=None):
 
     app = Flask(__name__, instance_relative_config=True)
+
+    socket = SocketIO(app)
 
     # config = {
     # 'MONGODB_SETTINGS': {
@@ -45,6 +50,19 @@ def create_app(test_config=None):
     # def hello():
     def index():
         return "hello, world"
+
+
+    ##################################################################################################
+    @socket.on('connect')
+    def connect():
+        recentMessages = {}; #db fetch... here #tbd
+        emit('recentMessages', recentMessages, brodcast = False, include_self = True); #include_self
+
+
+
+    ##################################################################################################
+
+    
         
     return app
 
