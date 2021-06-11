@@ -6,6 +6,7 @@ from instantChat.models.user import User as UserModel
 # project resources
 from instantChat.api.error import forbidden
 
+# print("================> START OF user.py")  
 
 class UserResource(Resource):
     # @jwt_required()

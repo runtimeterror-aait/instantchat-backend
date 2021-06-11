@@ -4,7 +4,7 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
 )
 from flask_restful import Api
-
+# print("================> START OF routes.py")  
 # project resources
 from instantChat.api.auth import SignUpApi, LoginApi
 from instantChat.resources.user import UserResource
