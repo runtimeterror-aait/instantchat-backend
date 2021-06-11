@@ -53,7 +53,7 @@ def create_app(test_config=None):
         return "hello, world"
 
 
-    ##################################################################################################
+    ###########################################See Frontend############################################
     @socket.on('connect')
     def connect():
         recentMessages = {}; #db fetch... here #tbd
@@ -64,6 +64,10 @@ def create_app(test_config=None):
         lastMessages = {}; #db fetch... here #tbd
         emit('lastMessages', lastMessages, brodcast = False, include_self = True); #tbcheck
 
+    @socket.on('sendMessage')
+    def sendMessage(msg):
+        #db here... add message
+        emit('message', msg, to = msg.room);
     
 
 
