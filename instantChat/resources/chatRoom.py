@@ -84,4 +84,5 @@ class PopularChatRoom(Resource):
     @jwt_required()
     def get(self) -> Response:
         chatRoom = ChatRoomModel.objects.order_by("members").members[:6]
+        # chatRoom = ChatRoomModel.objects.order_by("-members.length")[:6]
         return jsonify({"data": chatRoom})

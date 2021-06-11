@@ -24,7 +24,8 @@ class UserPhotos(EmbeddedDocument):
     profilePicture = BooleanField(default=False)
 
 class Contacts(EmbeddedDocument):
-    id = SequenceField()
+    id = SequenceField() #? mk
+    # user_id = ReferenceField(User)
     name = StringField(required=True);
     phone = PhoneField(required=True,unique=True);
 
@@ -39,6 +40,7 @@ class User(Document):
     deactivate = BooleanField()
     profilePicture = ListField(EmbeddedDocumentField(UserPhotos))
     contacts = ListField(EmbeddedDocumentField(Contacts))
+    # contacts = ListField(ReferenceField(User)) #//slf-ref #
     meta = {'queryset_class': BaseQuerySet}
 
     def generate_pw_hash(self):
