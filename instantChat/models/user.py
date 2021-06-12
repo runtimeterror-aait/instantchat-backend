@@ -11,7 +11,8 @@ import re
 class PhoneField(StringField):
 
     REGEX = re.compile(r"/^(^\+251|^251|^0)?9\d{8}$/")
-
+    meta = {'queryset_class': BaseQuerySet}
+    
     def validate(self, value):
         # Overwrite StringField validate method to include regex phone number check.
         if not PhoneField.REGEX.match(string=value):
@@ -23,13 +24,13 @@ class PhoneField(StringField):
 class UserPhotos(EmbeddedDocument):
     imagePath = StringField()
     profilePicture = BooleanField(default=False)
-
+    meta = {'queryset_class': BaseQuerySet}
 class Contacts(EmbeddedDocument):
     id = SequenceField() #? mk
     # user_id = ReferenceField(User)
     name = StringField(required=True);
     phone = PhoneField(required=True,unique=True);
-
+    meta = {'queryset_class': BaseQuerySet}
 class User(Document):
     username = StringField(required=True, unique=True)
     email = EmailField(required=True, unique=True)

@@ -64,7 +64,7 @@ class ChatRoom(Resource):
         chatRoom = ChatRoomModel.objects.get(id=chat_room_id)
         if chatRoom.owner == loggedInUser:
             chatRoom.update(**data)
-            chatRoom.save()
+            # chatRoom.save() #why save
             return jsonify({"data": chatRoom})
         else:
             return jsonify({"data": "you are not the owner of this chat room"})
