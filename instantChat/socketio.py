@@ -73,6 +73,21 @@ def setOnlineField(userID, value): #for now only set 'online' of User field
 def setLastSeenField(userID, value):
     User.objects(id=userID).update(set__lastSeen=value)
 
+def getlastRoomMessages(roomID):
+    return TextMessage.Objects.get_or_404(chatRoom=roomID).order_by("-timestamp")[:15] #get the latest/last 25 messages from this room #assuming chatRoom field is id...
+
+def addMessage(message, timestamp, chatroom, receiver_id = None, sender_id = user_id):
+    newMessage = {
+                "message": "{message}",
+                "chatroom": "{chatroom}", #or just self? #q #tb
+                "timestamp":  toDbDateFormat(timestamp),
+                "sender": "{sender_id}"
+            }
+    if receiver_id:
+        newMessage["receiver"] = "{receiver_id}"
+    newMessage = TextMessage(**newMessage)
+    newMessage.save()
+
 ###############################################See Frontend############################################
 room_ids = []; contactChat_ids = [];
 @socket.on('online')
@@ -102,8 +117,7 @@ def online(data):
 
 @socket.on('offline')
 def offline(data): #data #frontend
-    #db here... last seen (like UPDATE TABLE USERS COLUMN lastSeen to 'timestamp')
-    setLastSeenField(user_id, toDbDateFormat(data.lastSeen))
+    setLastSeenField(user_id, toDbDateFormat(data.lastSeen))#(like UPDATE TABLE USERS COLUMN lastSeen to 'timestamp')
 
     for contactChat_id in contactChat_ids:
         emit('userOffline', {"user_id": user_id, "lastSeen": data.lastSeen}, to = contactChat_id)
@@ -112,14 +126,14 @@ def offline(data): #data #frontend
     
 
 @socket.on('getlastMessages')
-def lastMessages(chatid):
-    lastMessages = {}; #db fetch... here #tbd
-    emit('lastMessages', lastMessages, brodcast = False, include_self = True); #tbcheck
+def lastMessages(data): #data
+    lastMessages = getlastRoomMessages(data.room_id);
+    emit('lastMessages', {"lastMessages":lastMessages}, brodcast=False, include_self=True); #tbcheck
 
 @socket.on('sendMessage')
-def sendMessage(msg):
-    #db here... add message
-    emit('message', msg, to = msg.room);
+def sendMessage(data): #data
+    addMessage(data.message, data.timestamp, data.chatroom, receiver_id=data.receiver_id) #db here... add message
+    emit('message', {"message": data.message, "timestamp": data.timestamp}, to= data.chatroom) #would have liked to have changed the field name from chatroom to chatroom_id or room_id or chat_id
 
 
 @socket.on('deleteChat') #haven't included callback

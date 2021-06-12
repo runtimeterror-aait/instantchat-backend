@@ -10,7 +10,7 @@ class Message(Document):
     sender = ReferenceField(User) #for chatroom created message
     receiver = ReferenceField(User) #isn't chatRoom enough?
     chatRoom = ReferenceField(ChatRoom, required=True)
-    timpstamp = DateTimeField()  #might not do gte, lte... like ComplexDateTimeField #%Y-%m-%d %H:%M #resources/messages.py will have to be updated
+    timestamp = DateTimeField()  #might not do gte, lte... like ComplexDateTimeField #%Y-%m-%d %H:%M #resources/messages.py will have to be updated
     meta = {'allow_inheritance': True}
 
 class TextMessage(Message):
