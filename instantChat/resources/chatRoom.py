@@ -1,4 +1,4 @@
-from flask import Response, request, jsonify
+from flask import Response, json, request, jsonify
 from flask_restful import Resource, abort, reqparse
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
@@ -85,4 +85,21 @@ class PopularChatRoom(Resource):
     def get(self) -> Response:
         chatRoom = ChatRoomModel.objects.order_by("members").members[:6]
         # chatRoom = ChatRoomModel.objects.order_by("-members.length")[:6]
+
+        #check and decide #mk #tb
+        # max = [-1,-1,-1,-1,-1,-1]
+        # room_ids = [-1,-1,-1,-1,-1,-1]
+        # for room in ChatRoomModel.objects.get_or_404(): #(privateMessaging=False) might help
+        #     for i in range(max.length):
+        #         if room.members.length > max[i]:
+        #             max = max[:i] + [room.members.length] + max[i:5] #shift right
+        #             room_ids = room_ids[:i] + [room.id] + room_ids[i:5] #shifts right together, while keeping track of ids
+        # if max[0] == 2: #since private messages are being counted, this might be a case
+        #     chatRoom = "None"
+        #     return jsonify({"data: chatRoom"})
+        # chatRoom = [] #to hold the 6 most popular rooms
+        # for room_id in room_ids:
+        #     for room in ChatRoomModel.Objects.get_or_404(id=room_id):
+        #         chatRoom.push(room)
+
         return jsonify({"data": chatRoom})
