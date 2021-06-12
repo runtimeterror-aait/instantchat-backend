@@ -88,6 +88,24 @@ def addMessage(message, timestamp, chatroom, receiver_id = None, sender_id = use
     newMessage = TextMessage(**newMessage)
     newMessage.save()
 
+def deleteRoom(roomID, userID):
+    room = ChatRoom.Objects.get_or_404(id=roomID)
+    if room.owner == userID:
+        room.delete()
+        return True
+    return False
+
+def deleteRoomMessage(messageID, userID):
+    message = TextMessage.Objects.get_or_404(id=messageID)
+    if message.sender == userID:# or message.chatroom.owner == userID: #q #would this work?
+        message.delete()
+        return True
+    room = ChatRoom.Objects.get_or_404(id=message.chatroom)
+    if room.owner == userID:
+        message.delete()
+        return True    
+    return False
+
 ###############################################See Frontend############################################
 room_ids = []; contactChat_ids = [];
 @socket.on('online')
@@ -137,18 +155,20 @@ def sendMessage(data): #data
 
 
 @socket.on('deleteChat') #haven't included callback
-def deleteChat(data):
-    #db here...
-    
-    #if succesful
-    emit('chatDeleted', data.chatid, to = data.chatid)   
-    close_room(data.chatid);
+def deleteChat(data): #data
+    if deleteRoom(data.room_id, user_id):
+        emit('chatDeleted', {"room_id":data.room_id}, to = data.room_id, include_self = True) #frontend notification, for, user needs confirmation
+        close_room(data.room_id);
+    else:
+        emit('notOwner', {"data": "You are unauthorized to delete the room as you are not its owner."}, to = data.room_id, include_self = True, brodcase = False)
 
 
 @socket.on('deleteMessage')
-def deleteMessage(data):
-    #db here...
-    emit('messageDeleted', data, to = data.chatid)
+def deleteMessage(data): #data
+    if deleteRoomMessage(data.message_id, user_id):#db here...
+        emit('messageDeleted', {"message_id":data.message_id}, to = data.room_id, include_self = True) #frontend notification, for, user needs confirmation
+    else:
+        emit('notAuthorized', {"data": "You are unauthorized to delete the message as you are it's author or the owner of the room."}, to = data.room_id, include_self = True, brodcase = False)
 
 
 
