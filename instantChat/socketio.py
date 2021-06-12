@@ -1,3 +1,4 @@
+import time
 from flask_jwt_extended.utils import get_jwt_identity
 from werkzeug.datastructures import CharsetAccept
 from instantChat import socket
@@ -37,6 +38,12 @@ def recentMessage(roomIds):
     # recentMessages = {}; #db fetch... here #tbd
 
     return recentMessages
+
+
+def toDbDateFormat(frontEndDateFormat):
+    date = time.strptime(frontEndDateFormat, '%b %d, %y %I:%M%p')
+    dbDateFormat = time.strftime('%Y-%m-%d %H:%M', date)
+    return dbDateFormat
 
 ###############################################See Frontend############################################
 @socket.on('online')

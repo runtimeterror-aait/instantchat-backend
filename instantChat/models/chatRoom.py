@@ -27,7 +27,7 @@ class ChatRoom(Document):
             createMessage = {
                 "message": "Chat created",
                 "chatroom": self.id, #or just self? #q #tb
-                "timestamp": time.strftime('%b %d, %y %I:%M%p', time.localtime())
+                "timestamp":  time.strftime("%Y-%m-%d %H:%M", time.localtime())
             }
             createMessage = TextMessage(**createMessage)
             createMessage.save()
