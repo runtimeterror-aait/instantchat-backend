@@ -67,10 +67,14 @@ def getOnlineContactIDs(userID, contactChatIds):
                     onlineContactIds.push(member_Id)
     return onlineContactIds
 
-def setField(userID, value): #for now only set 'online' of User field
+def setOnlineField(userID, value): #for now only set 'online' of User field
     User.objects(id=userID).update(set__online=value)
 
+def setLastSeenField(userID, value):
+    User.objects(id=userID).update(set__lastSeen=value)
+
 ###############################################See Frontend############################################
+room_ids = []; contactChat_ids = [];
 @socket.on('online')
 def online(data):
     #assuming all messages fields are in TextMessage Document
@@ -78,7 +82,7 @@ def online(data):
     room_ids = getRoomIDs(user_id)
     recentMessages = getRecentMessage(room_ids)
     
-    emit('recentMessages', recentMessages, brodcast = False, include_self = True); #include_self #tbch
+    emit('recentMessages', {"recentMessages":recentMessages}, brodcast = False, include_self = True); #include_self #tbch
 
     room_ids = [room_id for room_id in recentMessages.keys()]
     join_room(room_ids)
@@ -86,21 +90,23 @@ def online(data):
     #sending messages to all contacts to let them know the logged in user is online
     contactChat_ids = getContactChatIDs(room_ids)
     for contactChat_id in contactChat_ids: #for each contactChat id
-        emit('userOnline', user_id, to = contactChat_id, include_self = False)
+        emit('userOnline', {"user_id": user_id}, to = contactChat_id, include_self = False)
     
     #sending all online contacts of the user
     onlineContact_ids = getOnlineContactIDs(user_id, contactChat_ids)
-    emit('onlineContacts', onlineContact_ids, brodcast = False, include_self = True); #add to #front end #tbd! #!
+    emit('onlineContacts', {"onlineContact_ids":onlineContact_ids}, brodcast = False, include_self = True); #add to #front end #tbd! #!
     
     #setting the user status to online (the boolean field in the user document)
-    setField(user_id, True)
+    setOnlineField(user_id, True)
 
 
 @socket.on('offline')
-def offline(data):
+def offline(data): #data #frontend
     #db here... last seen (like UPDATE TABLE USERS COLUMN lastSeen to 'timestamp')
-    for contact in data.conids: #also in front end #fnd
-        emit('userOffline', {"userid": data.userid, "lastSeen": data.lastSeen}, to = contact)
+    setLastSeenField(user_id, toDbDateFormat(data.lastSeen))
+
+    for contactChat_id in contactChat_ids:
+        emit('userOffline', {"user_id": user_id, "lastSeen": data.lastSeen}, to = contactChat_id)
 
 
     
