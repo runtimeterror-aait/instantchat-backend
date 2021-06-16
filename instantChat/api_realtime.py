@@ -1,5 +1,5 @@
 # to be user by resources
-from instantChat.socketio import socket
+from instantChat import socket
 from flask_socketio import close_room, join_room, leave_room, emit
 
 # def SignUpApi():

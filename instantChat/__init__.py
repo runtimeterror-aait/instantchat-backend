@@ -1,12 +1,12 @@
 import os
 from re import S
 import re
-from flask import Flask
+from flask import Flask, app
 from flask_jwt_extended import JWTManager, get_jwt_identity
 from flask_mongoengine import MongoEngine
 
 from secrets import token_urlsafe
-
+from flask_cors import CORS
 import time
 from flask_socketio import SocketIO
 # from flask_socketio import close_room, join_room, leave_room, emit
@@ -16,12 +16,15 @@ db = MongoEngine() #mk
 jwt = JWTManager() #mk
 socket = SocketIO()
 
-
 def create_app(test_config=None):
 
     app = Flask(__name__, instance_relative_config=True)
 
-    socket.init_app(app)
+    CORS(app)
+    app.config['CORS_HEADERS'] = 'Content-Type'
+    CORS(app, resources={r"/*": {"origins": "*"}})
+
+    socket.init_app(app, cors_allowed_origins="*")
 
     # config = {
     # 'MONGODB_SETTINGS': {

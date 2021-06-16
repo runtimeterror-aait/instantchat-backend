@@ -24,8 +24,8 @@ class ContactsResource(Resource):
         contact = Contacts(**data)
         user.contacts.append(contact)
         user.save()
-        from instantChat.api_realtime import postContactsResource
-        postContactsResource(user.contacts)
+        # from instantChat.api_realtime import postContactsResource
+        # postContactsResource(user.contacts)
         return jsonify({'data': user.contacts})
 
 
@@ -50,8 +50,8 @@ class ContactResource(Resource):
                 user.contacts[i].name = data['name']
                 user.contacts[i].phone = data['phone']
                 user.save()  #save #mk #
-                from instantChat.api_realtime import putContactResource
-                putContactResource(user.contacts)
+                # from instantChat.api_realtime import putContactResource
+                # putContactResource(user.contacts)
                 return jsonify({'message': 'Contact updated'})
         return jsonify({'message': 'Contact doesn\'t exist'})
 
@@ -61,8 +61,8 @@ class ContactResource(Resource):
 
         for i in range(0, len(user.contacts)):
             if str(user.contacts[i].id) == contact_id:
-                from instantChat.api_realtime import deleteContactResource
-                deleteContactResource(user.contatcs)
+                # from instantChat.api_realtime import deleteContactResource
+                # deleteContactResource(user.contatcs)
                 del user.contacts[i]    #?
                 user.save() #?
                 return jsonify({'message': 'Contact Deleted'})

@@ -29,12 +29,12 @@ class Contacts(EmbeddedDocument):
     id = SequenceField() #? mk
     # user_id = ReferenceField(User)
     name = StringField(required=True);
-    phone = PhoneField(required=True,unique=True);
+    phone = StringField(required=True); #unique=True
     meta = {'queryset_class': BaseQuerySet}
 class User(Document):
-    username = StringField(primary_key=True, required=True, unique=True)
+    username = StringField(required=True, unique=True)
     email = EmailField(required=True, unique=True)
-    phone = PhoneField(required=True, unique=True)
+    phone = StringField(required=True, unique=True)
     password = StringField(required=True, min_length=6, regex=None)
     bio = StringField()
     online = BooleanField()

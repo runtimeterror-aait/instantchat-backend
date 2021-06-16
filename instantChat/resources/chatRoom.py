@@ -31,8 +31,8 @@ class ChatRooms(Resource):
         }
         newChatRoom = ChatRoomModel(**new)
         newChatRoom.save()
-        from instantChat.api_realtime import postChatRooms
-        postChatRooms(newChatRoom)
+        # from instantChat.api_realtime import postChatRooms
+        # postChatRooms(newChatRoom)
 
         return jsonify({"data": newChatRoom})
 
@@ -58,8 +58,8 @@ class ChatRoom(Resource):
             if ChatRoomModel.objects.get(id=chat_room_id, members=member).count() == 0:
                 ChatRoomModel.objects.get(id=chat_room_id).members.append(member)
         
-        from instantChat.api_realtime import postChatRoom
-        postChatRoom(newMembersList, chat_room_id)
+        # from instantChat.api_realtime import postChatRoom
+        # postChatRoom(newMembersList, chat_room_id)
 
         return jsonify({"message": "New members has been added"})
 
@@ -81,8 +81,8 @@ class ChatRoom(Resource):
         chatRoom = ChatRoomModel.objects.get(id=chat_room_id)
         if chatRoom.owner == loggedInUser:
             chatRoom.delete()
-            from instantChat.api_realtime import deleteChatRoom
-            deleteChatRoom(chatRoom)
+            # from instantChat.api_realtime import deleteChatRoom
+            # deleteChatRoom(chatRoom)
             return jsonify({"data": "Deleted successfully"})
         else:
             return jsonify({"data": "you are not the owner of this chat room"})

@@ -12,10 +12,11 @@ class SignUpApi(Resource):
     def post() -> Response:
         data = request.get_json()
         newUser = UserModel(**data)
+        print(newUser)
         newUser.save()
         output = {'id': str(newUser.id)} #only the id? #mk #created recource uri based on ...
-        from instantChat.api_realtime import SignUpApi
-        SignUpApi(newUser)
+        # from instantChat.api_realtime import SignUpApi
+        # SignUpApi(newUser)
         return jsonify({'result': output})
 
 

@@ -25,8 +25,8 @@ class UserResource(Resource):
         data = request.get_json()
         put_user = UserModel.objects(id=get_jwt_identity()).update(**data)
         output = {'id': str(put_user.id)}
-        from instantChat.api_realtime import putUserResource
-        putUserResource(put_user)
+        # from instantChat.api_realtime import putUserResource
+        # putUserResource(put_user)
         return jsonify({'result': output})
 
     # @jwt_required()
