@@ -53,7 +53,7 @@ class ChatRoom(Resource):
 
         for member in newMembersList:
             if ChatRoomModel.objects.get(id=chat_room_id, members=member).count() == 0:
-                ChatRoom.objects.get(id=chat_room_id).members.append(member)
+                ChatRoomModel.objects.get(id=chat_room_id).members.append(member)
 
         return jsonify({"message": "New members has been added"})
 

@@ -4,11 +4,11 @@ from mongoengine import *
 from flask import jsonify
 from mongoengine.fields import CachedReferenceField, ListField, LongField, StringField, ReferenceField, BooleanField
 from instantChat.models.user import User
-from instantChat.models.message import TextMessage
+# from instantChat.models.message import TextMessage
 
 import time
 
-class ChatRoom(Document):
+class ChatRoom(Document): #mk #could better this by making it inhert a room document, and make two childs - groupchat and privatechat
     name = StringField() #chat room name 
     description = StringField()
     owner = ReferenceField(User)
@@ -17,17 +17,23 @@ class ChatRoom(Document):
     privateMessaging = BooleanField()
     meta = {'queryset_class': BaseQuerySet}
 
-    def save(self, *args, **kwargs):
-        # Overwrite Document save method to add a message saying "Chat created" when created
-    #     # Overwrite Document save method to increment membersCount every time a user is added to the chat room
-        if self._created:
-            # ChatRoom.objects(id=self.id).update_one(inc__membersCount=1)
-    #         # self.membersCount += 1;
-    #         # self.membersCount = ChatRoom.Objects(id = self.id).membersCount + 1;
-            createMessage = {
-                "message": ("Private " if (self.privateMessaging) else "Group ") + "Chat created",
-                "chatroom": self.id, #or just self? #q #tb
-                "timestamp":  time.strftime("%Y-%m-%d %H:%M", time.localtime())
-            }
-            createMessage = TextMessage(**createMessage)
-        super(User, self).save(*args, **kwargs)
+
+
+
+
+
+        #will be handled elsewhere (socket/)
+    # def save(self, *args, **kwargs):
+    #     # Overwrite Document save method to add a message saying "Chat created" when created
+    # #     # Overwrite Document save method to increment membersCount every time a user is added to the chat room
+    #     if self._created:
+    #         # ChatRoom.objects(id=self.id).update_one(inc__membersCount=1)
+    # #         # self.membersCount += 1;
+    # #         # self.membersCount = ChatRoom.Objects(id = self.id).membersCount + 1;
+    #         createMessage = {
+    #             "message": ("Private " if (self.privateMessaging) else "Group ") + "Chat created",
+    #             "chatroom": self, #or just self? #q #tb
+    #             "timestamp":  time.strftime("%Y-%m-%d %H:%M", time.localtime())
+    #         }
+    #         createMessage = TextMessage(**createMessage)
+        # super(User, self).save(*args, **kwargs)

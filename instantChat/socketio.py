@@ -1,7 +1,10 @@
+import re
+from typing import NewType
+
+from mongoengine.errors import DoesNotExist
 from instantChat.models.user import User
 import time
 from flask_jwt_extended.utils import get_jwt_identity
-from werkzeug.datastructures import CharsetAccept
 from instantChat import socket
 from flask_socketio import close_room, join_room, leave_room, emit
 from instantChat.models.message import TextMessage
@@ -106,6 +109,23 @@ def deleteRoomMessage(messageID, userID):
         return True    
     return False
 
+
+def createChatRoom(name, member_ids, timestamp, description = "Private Chat", owner_id = "", privateMessaging = "True"):
+    ''' creates a chat room and sends a global system message on it confirming it's creation
+        returns confirmation message and the id, and member ids of the room created '''
+    member_ids.push(user_id) #frnt end must not send user_id
+    if privateMessaging:
+        newPrivateChat = ChatRoom(name = name, description = description, owner = owner_id, privateMessaging = privateMessaging, members = member_ids).save()
+        globalconfirmationMessage = addMessage(message="Private Chat Successfully Created!", timestamp=timestamp, chatroom=newPrivateChat.id)
+        return {"confirmation" : globalconfirmationMessage.message, "room_id":newPrivateChat.id, "member_ids": newPrivateChat.members}
+    newGroupChat = ChatRoom(name = name, description = description, privateMessaging = privateMessaging, members = member_ids).save()
+    globalconfirmationMessage = addMessage(message="Group Chat Successfully Created!", timestamp=timestamp, chatroom=newGroupChat.id)
+    return {"message" : globalconfirmationMessage.message, "room_id":newGroupChat.id, "member_ids": newGroupChat.members}
+
+# def user_id_of_username(userID): #for when username isnt pk
+#     return
+
+
 ###############################################See Frontend############################################
 room_ids = []; contactChat_ids = [];
 @socket.on('online')
@@ -115,7 +135,7 @@ def online(data):
     room_ids = getRoomIDs(user_id)
     recentMessages = getRecentMessage(room_ids)
     
-    emit('recentMessages', {"recentMessages":recentMessages}, brodcast = False, include_self = True); #include_self #tbch
+    emit('recentMessages', {"recentMessages":recentMessages}, broadcast = False, include_self = True); #include_self #tbch
 
     room_ids = [room_id for room_id in recentMessages.keys()]
     join_room(room_ids)
@@ -127,7 +147,7 @@ def online(data):
     
     #sending all online contacts of the user
     onlineContact_ids = getOnlineContactIDs(user_id, contactChat_ids)
-    emit('onlineContacts', {"onlineContact_ids":onlineContact_ids}, brodcast = False, include_self = True); #add to #front end #tbd! #!
+    emit('onlineContacts', {"onlineContact_ids":onlineContact_ids}, broadcast = False, include_self = True); #add to #front end #tbd! #!
     
     #setting the user status to online (the boolean field in the user document)
     setOnlineField(user_id, True)
@@ -135,40 +155,100 @@ def online(data):
 
 @socket.on('offline')
 def offline(data): #data #frontend
-    setLastSeenField(user_id, toDbDateFormat(data.lastSeen))#(like UPDATE TABLE USERS COLUMN lastSeen to 'timestamp')
+    setLastSeenField(user_id, toDbDateFormat(data["lastSeen"]))#(like UPDATE TABLE USERS COLUMN lastSeen to 'timestamp')
 
     for contactChat_id in contactChat_ids:
-        emit('userOffline', {"user_id": user_id, "lastSeen": data.lastSeen}, to = contactChat_id)
+        emit('userOffline', {"user_id": user_id, "lastSeen": data["lastSeen"]}, to = contactChat_id)
 
 
+# //------------------------------------create, join chats---------------------------------//
+#createPrivateChat event
+#createGroupChat event
+#joinChat 
+
+ 
+
+
+#for both private and group
+@socket.on('createChat')
+def createChat(data): #data json #if private chat, don't send in owner_id, etc, now even as Null -- send ONLY the other member in a list, and name (user choosen) #always including timestamp
+    confimation = createChatRoom(**data)
+    room_ids.push(confimation.room_id)
+    #members need to join the group
+    join_room(confimation.room_id) 
+    socket.emit('newChat', {"member_ids": confimation.member_ids, "room_id":confimation.room_id, "message": confimation.message}, broadcast = True, include_self = False) #will improve it #frnt end should reply with their id and the room id if they are members (no problem for offline members since ... db) => joingChat, that is
+
+    socket.emit('chatCreated', {"confirmation": confimation.message}, to=confimation.room_id, include_self = True)
+
+
+@socket.on('joiningChat')
+def joiningChat(data): #data #user id / member id and room id and message
+    if user_id == data["user_id"]: #security check
+        join_room(data["room_id"])
+        socket.emit('joinedChat', {"message": data["message"]}, include_self=True, broadcast=False) #must be handled exactly like chatCreated in the front end so ... use functions for the same code
+        # socket.emit('chatCreated', {"confirmation": confimation.confirmation}, to=confimation.room_id, include_self = True) #if it works, use this #check #tbchk
+
+
+def roomExits(roomID):
+    # return True if ChatRoom.Objects.get(id=roomID).count() == 1 else False #count returns 0 when there's no query result right? didn't use get_or_404 bc ... 404
+    try:
+        ChatRoom.Objects.get(id=roomID)
+        return True
+    except DoesNotExist:
+        return True
+        
+
+# @socket.on('createGroupChat')
+@socket.on('joinChat')
+def joinChat(data):
+    if roomExits(data["room_id"]): #a check #security check
+        join_room(data["room_id"])
+        socket.emit("joinedRoom", {"room_id":data["room_id"]}, broadcast = False, include_self = False) #front end will have to then open the chat, emit openChat, causing messages to be fetched from db ...
+    socket.emit("roomDoesntExist", {"error" : "Room doesn't exist"}, include_self=True, broadcast=True) #should be implemented in the front end after everything else
+
+
+
+
+# //------------------------------------Open chat---------------------------------//
     
 
 @socket.on('getlastMessages')
 def lastMessages(data): #data
-    lastMessages = getlastRoomMessages(data.room_id);
-    emit('lastMessages', {"lastMessages":lastMessages}, brodcast=False, include_self=True); #tbcheck
+    lastMessages = getlastRoomMessages(data["room_id"]);
+    emit('lastMessages', {"lastMessages":lastMessages}, broadcast=False, include_self=True); #tbcheck
+
+
+
+
+
+# --------------------------------------------------------send Message-----------------------------#
 
 @socket.on('sendMessage')
 def sendMessage(data): #data
-    addMessage(data.message, data.timestamp, data.chatroom, receiver_id=data.receiver_id) #db here... add message
-    emit('message', {"message": data.message, "timestamp": data.timestamp}, to= data.chatroom) #would have liked to have changed the field name from chatroom to chatroom_id or room_id or chat_id
+    addMessage(data["message"], data["timestamp"], data["chatroom"], receiver_id=data["receiver_id"]) #db here... add message
+    emit('message', {"message": data["message"], "timestamp": data["timestamp"]}, to= data["chatroom"]) #would have liked to have changed the field name from chatroom to chatroom_id or room_id or chat_id
 
+
+
+
+
+#---------------------------------------------delet Chat, Message------------------------------#
 
 @socket.on('deleteChat') #haven't included callback
 def deleteChat(data): #data
-    if deleteRoom(data.room_id, user_id):
-        emit('chatDeleted', {"room_id":data.room_id}, to = data.room_id, include_self = True) #frontend notification, for, user needs confirmation
-        close_room(data.room_id);
+    if deleteRoom(data["room_id"], user_id):
+        emit('chatDeleted', {"room_id":data["room_id"]}, to = data["room_id"], include_self = True) #frontend notification, for, user needs confirmation
+        close_room(data["room_id"]);
     else:
-        emit('notOwner', {"data": "You are unauthorized to delete the room as you are not its owner."}, to = data.room_id, include_self = True, brodcase = False)
+        emit('notOwner', {"data": "You are unauthorized to delete the room as you are not its owner."}, to = data["room_id"], include_self = True, broadcast = False)
 
 
 @socket.on('deleteMessage')
 def deleteMessage(data): #data
-    if deleteRoomMessage(data.message_id, user_id):#db here...
-        emit('messageDeleted', {"message_id":data.message_id}, to = data.room_id, include_self = True) #frontend notification, for, user needs confirmation
+    if deleteRoomMessage(data["message_id"], user_id):#db here...
+        emit('messageDeleted', {"message_id":data["message_id"]}, to = data["room_id"], include_self = True) #frontend notification, for, user needs confirmation
     else:
-        emit('notAuthorized', {"data": "You are unauthorized to delete the message as you are it's author or the owner of the room."}, to = data.room_id, include_self = True, brodcase = False)
+        emit('notAuthorized', {"data": "You are unauthorized to delete the message as you are it's author or the owner of the room."}, to = data["room_id"], include_self = True, broadcast = False)
 
 
 
