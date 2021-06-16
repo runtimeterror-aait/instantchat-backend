@@ -25,10 +25,9 @@ class ChatRoom(Document):
     #         # self.membersCount += 1;
     #         # self.membersCount = ChatRoom.Objects(id = self.id).membersCount + 1;
             createMessage = {
-                "message": "Chat created",
+                "message": ("Private " if (self.privateMessaging) else "Group ") + "Chat created",
                 "chatroom": self.id, #or just self? #q #tb
                 "timestamp":  time.strftime("%Y-%m-%d %H:%M", time.localtime())
             }
             createMessage = TextMessage(**createMessage)
-            createMessage.save()
         super(User, self).save(*args, **kwargs)

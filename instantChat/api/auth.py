@@ -13,7 +13,7 @@ class SignUpApi(Resource):
         data = request.get_json()
         newUser = UserModel(**data)
         newUser.save()
-        output = {'id': str(newUser.id)} #only the id? #mk
+        output = {'id': str(newUser.id)} #only the id? #mk #created recource uri based on ...
         return jsonify({'result': output})
 
 

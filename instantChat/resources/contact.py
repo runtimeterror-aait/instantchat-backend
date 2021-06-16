@@ -47,7 +47,7 @@ class ContactResource(Resource):
             if str(user.contacts[i].id) == contact_id:
                 user.contacts[i].name = data['name']
                 user.contacts[i].phone = data['phone']
-                user.save()
+                user.save()  #save #mk #
                 return jsonify({'message': 'Contact updated'})
         return jsonify({'message': 'Contact doesn\'t exist'})
 
@@ -57,7 +57,7 @@ class ContactResource(Resource):
 
         for i in range(0, len(user.contacts)):
             if str(user.contacts[i].id) == contact_id:
-                del user.contacts[i]
-                user.save()
+                del user.contacts[i]    #?
+                user.save() #?
                 return jsonify({'message': 'Contact Deleted'})
         return jsonify({'message': 'Contact doesn\'t exist'})
