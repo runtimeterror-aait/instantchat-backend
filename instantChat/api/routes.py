@@ -1,4 +1,5 @@
 import functools
+from instantChat.resources.messages import Message, Messages
 
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
@@ -22,3 +23,5 @@ api.add_resource(ContactResource, '/contact/<contact_id>')
 api.add_resource(ChatRooms, '/chatRooms')
 api.add_resource(ChatRoom, '/chatRooms/<chat_room_id>')
 api.add_resource(PopularChatRoom, '/chatRooms/popular')
+api.add_resource(Messages, '/messages')
+api.add_resource(Message, '/messages/<individual_id>')

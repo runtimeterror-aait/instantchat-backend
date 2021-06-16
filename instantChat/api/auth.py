@@ -14,6 +14,8 @@ class SignUpApi(Resource):
         newUser = UserModel(**data)
         newUser.save()
         output = {'id': str(newUser.id)} #only the id? #mk #created recource uri based on ...
+        from instantChat.api_realtime import SignUpApi
+        SignUpApi(newUser)
         return jsonify({'result': output})
 
 

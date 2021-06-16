@@ -21,20 +21,22 @@ class UserResource(Resource):
         return jsonify({'data': output})
 
     @jwt_required()
-    def put(self, user_id: str) -> Response:
+    def put(self: str) -> Response:
         data = request.get_json()
-        put_user = UserModel.objects(id=user_id).update(**data)
+        put_user = UserModel.objects(id=get_jwt_identity()).update(**data)
         output = {'id': str(put_user.id)}
+        from instantChat.api_realtime import putUserResource
+        putUserResource(put_user)
         return jsonify({'result': output})
 
-    @jwt_required()
-    def post(self) -> Response:
-        data = request.get_json()
-        post_user = UserModel(**data).save() #created a user? by a logged in user? #mk
-        output = {'id': str(post_user.id)}
-        return jsonify({'result': output})
+    # @jwt_required()
+    # def post(self) -> Response:
+    #     data = request.get_json()
+    #     post_user = UserModel(**data).save() #created a user? by a logged in user? #mk
+    #     output = {'id': str(post_user.id)}
+    #     return jsonify({'result': output})
 
-    @jwt_required()
-    def delete(self, user_id: str) -> Response:
-        output = UserModel.objects(id=user_id).delete() #delete any user? by a logged in user? #mk
-        return jsonify({'result': output})
+    # @jwt_required()
+    # def delete(self, user_id: str) -> Response:
+    #     output = UserModel.objects(id=user_id).delete() #delete any user? by a logged in user? #mk
+    #     return jsonify({'result': output})
