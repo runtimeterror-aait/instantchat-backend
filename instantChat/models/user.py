@@ -6,6 +6,7 @@ from flask_bcrypt import generate_password_hash, check_password_hash
 
 import re
 
+
 class PhoneField(StringField):
 
     REGEX = re.compile(r"/^(^\+251|^251|^0)?9\d{8}$/")
@@ -22,10 +23,12 @@ class UserPhotos(EmbeddedDocument):
     imagePath = StringField()
     profilePicture = BooleanField(default=False)
 
+
 class Contacts(EmbeddedDocument):
     id = SequenceField()
-    name = StringField(required=True);
-    phone = PhoneField(required=True,unique=True);
+    name = StringField(required=True)
+    phone = PhoneField(required=True)
+
 
 class User(Document):
     username = StringField(required=True, unique=True)
@@ -38,7 +41,7 @@ class User(Document):
     deactivate = BooleanField()
     profilePicture = ListField(EmbeddedDocumentField(UserPhotos))
     contacts = ListField(EmbeddedDocumentField(Contacts))
-    
+
     def generate_pw_hash(self):
         self.password = generate_password_hash(
             password=self.password).decode('utf-8')

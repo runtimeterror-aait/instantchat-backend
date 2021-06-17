@@ -10,7 +10,6 @@ class Message(Document):
     receiver = ReferenceField(User)
     chatRoom = ReferenceField(ChatRoom)
     meta = {'allow_inheritance': True}
-
 class TextMessage(Message):
     message = StringField(required=True)
 

@@ -22,7 +22,10 @@ class LoginApi(Resource):
     @staticmethod
     def post() -> Response:
         data = request.get_json()
-        user = UserModel.objects.get(email=data.get('email'))
+        try:
+            user = UserModel.objects.get(email=data.get('email'))
+        except:
+            return jsonify({"message": "user doesn't exist"})
         auth_success = user.check_pw_hash(data.get('password'))
         if not auth_success:
             return unauthorized()
