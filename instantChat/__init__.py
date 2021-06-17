@@ -3,10 +3,14 @@ from flask import Flask
 from flask_jwt_extended import JWTManager
 from flask_mongoengine import MongoEngine
 from flask_cors import CORS
+
 def create_app(test_config=None):
     
     app = Flask(__name__, instance_relative_config=True)
-    cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+    CORS(app)
+    app.config['CORS_HEADERS'] = 'Content-Type'
+    CORS(app, resources={r"/*": {"origins": "*"}})
+
     # config = {
     # 'MONGODB_SETTINGS': {
     #     'db': 'instantChat',
@@ -42,7 +46,7 @@ def create_app(test_config=None):
     app.add_url_rule('/', endpoint='index')
 
     @app.route("/")
-    def hello():
+    def index():
         return "hello, world"
         
     return app
