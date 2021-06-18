@@ -1,6 +1,7 @@
 from flask import Response, request, jsonify
 from flask_restful import Resource, abort, reqparse
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from mongoengine.base.fields import ObjectIdField
 
 from instantChat.models.user import User as UserModel
 # project resources
@@ -13,10 +14,19 @@ class UserResource(Resource):
         if user_id == "self":
             output = UserModel.objects.get(id=get_jwt_identity())
         else:
-            output = UserModel.objects.get(phone=user_id)
-            if output.count() == 0:
-                output = UserModel.objects.get(id=user_id)
-                return jsonify({'data': output})
+            try:
+                output = UserModel.objects.get(phone=user_id)
+            except:
+                print("==================> not phone <===========")
+                # if output.count() == 0:
+                print(user_id)
+                print(UserModel)
+                try:
+                    output = UserModel.objects.get(id=user_id) #ObjectId(user_id) ?
+                    # output = UserModel.objects.get(id=ObjectID(user_id))
+                    return jsonify({'data': output})
+                except:
+                    return jsonify({'message': "No user with the given id"})
         return jsonify({'data': output})
 
     @jwt_required()

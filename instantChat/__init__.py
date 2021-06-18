@@ -10,22 +10,21 @@ def create_app(test_config=None):
     CORS(app)
     app.config['CORS_HEADERS'] = 'Content-Type'
     CORS(app, resources={r"/*": {"origins": "*"}})
-
-    # config = {
-    # 'MONGODB_SETTINGS': {
-    #     'db': 'instantChat',
-    #     'host': 'localhost',
-    #     'port': 27017,
-    # },
-    # 'JWT_SECRET_KEY': 'instantChatKey'
-    # }
     config = {
     'MONGODB_SETTINGS': {
-        'db': 'bmbni9iduxoifkf',
-        'host': 'mongodb://ullxngscsr8pmavwdoia:seAjYXu2i8x5MJrCRAyg@bmbni9iduxoifkf-mongodb.services.clever-cloud.com:27017/bmbni9iduxoifkf',
+        'db': 'instantChat',
+        'host': 'localhost',
+        'port': 27017,
     },
     'JWT_SECRET_KEY': 'instantChatKey'
     }
+    # config = {
+    # 'MONGODB_SETTINGS': {
+    #     'db': 'bmbni9iduxoifkf',
+    #     'host': 'mongodb://ullxngscsr8pmavwdoia:seAjYXu2i8x5MJrCRAyg@bmbni9iduxoifkf-mongodb.services.clever-cloud.com:27017/bmbni9iduxoifkf',
+    # },
+    # 'JWT_SECRET_KEY': 'instantChatKey'
+    # }
     app.config.update(config)
 
     # load config variables

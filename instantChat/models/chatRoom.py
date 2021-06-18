@@ -8,11 +8,16 @@ from instantChat.models.user import User
 
 import time
 
+# class PrivateChatRoom(Document):
+#     member1 = ReferenceField(User)
+#     member2 = ReferenceField(User)
+#     meta = {'queryset_class': BaseQuerySet}
+
 class ChatRoom(Document): #mk #could better this by making it inhert a room document, and make two childs - groupchat and privatechat
     # name = StringField() #chat room name 
     # description = StringField()
     # owner = ReferenceField(User)
-    members = ListField(ReferenceField(User)) #Only twi if its private #including owner
+    members = ListField(ReferenceField(User))#, unique=True) #Only twi if its private #including owner
     # membersCount = LongField() #to keep count of members #also userful to calc Popular Chat Rooms
     privateMessaging = BooleanField()
     meta = {'queryset_class': BaseQuerySet}
@@ -29,10 +34,10 @@ class ChatRoom(Document): #mk #could better this by making it inhert a room docu
     #     if self._created:
     #         # ChatRoom.objects(id=self.id).update_one(inc__membersCount=1)
     # #         # self.membersCount += 1;
-    # #         # self.membersCount = ChatRoom.Objects(id = self.id).membersCount + 1;
+    # #         # self.membersCount = ChatRoom.objects(id = self.id).membersCount + 1;
     #         createMessage = {
     #             "message": ("Private " if (self.privateMessaging) else "Group ") + "Chat created",
-    #             "chatroom": self, #or just self? #q #tb
+    #             "chatRoom": self, #or just self? #q #tb
     #             "timestamp":  time.strftime("%Y-%m-%d %H:%M", time.localtime())
     #         }
     #         createMessage = TextMessage(**createMessage)

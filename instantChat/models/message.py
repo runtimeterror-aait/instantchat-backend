@@ -8,7 +8,7 @@ from instantChat.models.chatRoom import ChatRoom
 
 ##############################################################
 class Message(Document):
-    sender = ReferenceField(User) #for chatroom created message
+    sender = ReferenceField(User) #for chatRoom created message
     receiver = ReferenceField(User) #isn't chatRoom enough?
     chatRoom = ReferenceField(ChatRoom, required=True)
     timestamp = DateTimeField()  #might not do gte, lte... like ComplexDateTimeField #%Y-%m-%d %H:%M #resources/messages.py will have to be updated

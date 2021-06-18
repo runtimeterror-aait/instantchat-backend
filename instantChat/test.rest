@@ -1,0 +1,102 @@
+POST http://localhost:5000/v1/api/auth/register
+Content-Type: application/json;
+
+{
+    "username": "test3",
+    "email":"test3@test.test",
+    "phone":"+12423443",
+    "password":"testpassword",
+    "bio":"testing"
+}
+
+
+###
+GET http://localhost:5000
+
+###
+POST http://localhost:5000/v1/api/auth/login
+Content-Type: application/json;
+
+{
+    "email":"test2@test.test",
+    "password":"testpassword"
+}
+
+###
+GET http://localhost:5000/v1/api/user/60cf32f576659090e5a80f83
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTYyNDE5NDk2NCwianRpIjoiOTY5YmQ2ZDQtN2M0MS00ZjA0LWFmYmUtZDQyMmFiYTAwMzc5IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjYwY2YzMzRhNzY2NTkwOTBlNWE4MGY4NSIsIm5iZiI6MTYyNDE5NDk2NCwiZXhwIjoxNjI0NjI2OTY0fQ.sdmHDgz-KMgbPNOrNUGh-t7-vj1gwcSOCJfJdUcksQQ
+
+###
+GET http://localhost:5000/v1/api/user/self
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTYyNDE5NDk2NCwianRpIjoiOTY5YmQ2ZDQtN2M0MS00ZjA0LWFmYmUtZDQyMmFiYTAwMzc5IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjYwY2YzMzRhNzY2NTkwOTBlNWE4MGY4NSIsIm5iZiI6MTYyNDE5NDk2NCwiZXhwIjoxNjI0NjI2OTY0fQ.sdmHDgz-KMgbPNOrNUGh-t7-vj1gwcSOCJfJdUcksQQ
+
+
+
+
+###
+POST http://localhost:5000/v1/api/chatRooms/contact/60cf32f576659090e5a80f83
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTYyNDE5NDk2NCwianRpIjoiOTY5YmQ2ZDQtN2M0MS00ZjA0LWFmYmUtZDQyMmFiYTAwMzc5IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjYwY2YzMzRhNzY2NTkwOTBlNWE4MGY4NSIsIm5iZiI6MTYyNDE5NDk2NCwiZXhwIjoxNjI0NjI2OTY0fQ.sdmHDgz-KMgbPNOrNUGh-t7-vj1gwcSOCJfJdUcksQQ
+
+###
+POST http://localhost:5000/v1/api/chatRooms/contact/60cf3e19a741ee1c61dbf10d
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTYyNDE5NDk2NCwianRpIjoiOTY5YmQ2ZDQtN2M0MS00ZjA0LWFmYmUtZDQyMmFiYTAwMzc5IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjYwY2YzMzRhNzY2NTkwOTBlNWE4MGY4NSIsIm5iZiI6MTYyNDE5NDk2NCwiZXhwIjoxNjI0NjI2OTY0fQ.sdmHDgz-KMgbPNOrNUGh-t7-vj1gwcSOCJfJdUcksQQ
+
+###
+DELETE  http://localhost:5000/v1/api/chatRooms/60cf889de36c92f7483b2bf8
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTYyNDE5NDk2NCwianRpIjoiOTY5YmQ2ZDQtN2M0MS00ZjA0LWFmYmUtZDQyMmFiYTAwMzc5IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjYwY2YzMzRhNzY2NTkwOTBlNWE4MGY4NSIsIm5iZiI6MTYyNDE5NDk2NCwiZXhwIjoxNjI0NjI2OTY0fQ.sdmHDgz-KMgbPNOrNUGh-t7-vj1gwcSOCJfJdUcksQQ
+
+
+###
+POST http://localhost:5000/v1/api/messages
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTYyNDE5NDk2NCwianRpIjoiOTY5YmQ2ZDQtN2M0MS00ZjA0LWFmYmUtZDQyMmFiYTAwMzc5IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjYwY2YzMzRhNzY2NTkwOTBlNWE4MGY4NSIsIm5iZiI6MTYyNDE5NDk2NCwiZXhwIjoxNjI0NjI2OTY0fQ.sdmHDgz-KMgbPNOrNUGh-t7-vj1gwcSOCJfJdUcksQQ
+
+{
+    "message": "Heyoooooooooooo",
+    "chatRoom": "60cf5e4da4355561694157c0"
+}
+
+###
+POST http://localhost:5000/v1/api/contacts
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTYyNDE5NDk2NCwianRpIjoiOTY5YmQ2ZDQtN2M0MS00ZjA0LWFmYmUtZDQyMmFiYTAwMzc5IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjYwY2YzMzRhNzY2NTkwOTBlNWE4MGY4NSIsIm5iZiI6MTYyNDE5NDk2NCwiZXhwIjoxNjI0NjI2OTY0fQ.sdmHDgz-KMgbPNOrNUGh-t7-vj1gwcSOCJfJdUcksQQ
+
+{
+    "phone": "+12423452",
+    "name": "Test 1"
+}
+
+###
+GET  http://localhost:5000/v1/api/contact/60cf32f576659090e5a80f83
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTYyNDE5NDk2NCwianRpIjoiOTY5YmQ2ZDQtN2M0MS00ZjA0LWFmYmUtZDQyMmFiYTAwMzc5IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjYwY2YzMzRhNzY2NTkwOTBlNWE4MGY4NSIsIm5iZiI6MTYyNDE5NDk2NCwiZXhwIjoxNjI0NjI2OTY0fQ.sdmHDgz-KMgbPNOrNUGh-t7-vj1gwcSOCJfJdUcksQQ
+
+
+
+###
+GET http://localhost:5000/v1/api/messages/recent
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTYyNDE5NDk2NCwianRpIjoiOTY5YmQ2ZDQtN2M0MS00ZjA0LWFmYmUtZDQyMmFiYTAwMzc5IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjYwY2YzMzRhNzY2NTkwOTBlNWE4MGY4NSIsIm5iZiI6MTYyNDE5NDk2NCwiZXhwIjoxNjI0NjI2OTY0fQ.sdmHDgz-KMgbPNOrNUGh-t7-vj1gwcSOCJfJdUcksQQ
+
+###
+GET http://localhost:5000/v1/api/messages/chatRoom/60cf5e4da4355561694157c0
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTYyNDE5NDk2NCwianRpIjoiOTY5YmQ2ZDQtN2M0MS00ZjA0LWFmYmUtZDQyMmFiYTAwMzc5IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjYwY2YzMzRhNzY2NTkwOTBlNWE4MGY4NSIsIm5iZiI6MTYyNDE5NDk2NCwiZXhwIjoxNjI0NjI2OTY0fQ.sdmHDgz-KMgbPNOrNUGh-t7-vj1gwcSOCJfJdUcksQQ
+
+
+###
+GET http://localhost:5000/v1/api/chatRooms/popular
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTYyNDE5NDk2NCwianRpIjoiOTY5YmQ2ZDQtN2M0MS00ZjA0LWFmYmUtZDQyMmFiYTAwMzc5IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjYwY2YzMzRhNzY2NTkwOTBlNWE4MGY4NSIsIm5iZiI6MTYyNDE5NDk2NCwiZXhwIjoxNjI0NjI2OTY0fQ.sdmHDgz-KMgbPNOrNUGh-t7-vj1gwcSOCJfJdUcksQQ
+
+
+
+
+
+###
+GET http://localhost:5000/v1/api/auth/logout
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTYyNDE5NDk2NCwianRpIjoiOTY5YmQ2ZDQtN2M0MS00ZjA0LWFmYmUtZDQyMmFiYTAwMzc5IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjYwY2YzMzRhNzY2NTkwOTBlNWE4MGY4NSIsIm5iZiI6MTYyNDE5NDk2NCwiZXhwIjoxNjI0NjI2OTY0fQ.sdmHDgz-KMgbPNOrNUGh-t7-vj1gwcSOCJfJdUcksQQ
+
+
+
+
+###
+GET  http://localhost:5000/v1/api/test
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTYyNDE5NDk2NCwianRpIjoiOTY5YmQ2ZDQtN2M0MS00ZjA0LWFmYmUtZDQyMmFiYTAwMzc5IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjYwY2YzMzRhNzY2NTkwOTBlNWE4MGY4NSIsIm5iZiI6MTYyNDE5NDk2NCwiZXhwIjoxNjI0NjI2OTY0fQ.sdmHDgz-KMgbPNOrNUGh-t7-vj1gwcSOCJfJdUcksQQ

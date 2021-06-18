@@ -11,10 +11,14 @@ class SignUpApi(Resource):
     @staticmethod
     def post() -> Response:
         data = request.get_json()
-        newUser = UserModel(**data)
-        newUser.save()
-        output = {'id': str(newUser.id)}
-        return jsonify({'result': output})
+        try:
+            newUser = UserModel(**data)
+            newUser.save()
+            output = {'id': str(newUser.id)}
+            return jsonify({'result': output})
+        except:
+            return jsonify({'message': "Bad request. User probably already exists."})
+
 
 
 class LoginApi(Resource):

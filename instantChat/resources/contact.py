@@ -1,3 +1,4 @@
+import re
 from flask import Response, request, jsonify
 from flask_restful import Resource, abort, reqparse
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -23,12 +24,15 @@ class ContactsResource(Resource):
         user = UserModel.objects.get(id=get_jwt_identity())
 
         try:
-            checkUser = UserModel.objects(phone=data['phone'])
-            if(checkUser.count() == 0):
-                return jsonify({ "message": "The User doesn't exist in ichat" })
-        except:
-            return jsonify({ "message": "The User doesn't exist in ichat" })
-        data["userId"] = str(checkUser.first()['id'])
+            checkUser = UserModel.objects.get(phone=data['phone'])
+        except Exception as err:
+            return jsonify({ "message": "The User with the given phone number doesn't exist in ichat", "error": str(err)})
+        for contact in user.contacts:
+            # print(contact.id, checkUser['id'])
+            # if contact.id == checkUser['id']:
+            if str(contact.id) == str(checkUser['id']):
+                return jsonify({"message":"User already in your contacts."})
+        data["id"] = str(checkUser['id'])
         contact = Contacts(**data)
         user.contacts.append(contact)
         user.save()
