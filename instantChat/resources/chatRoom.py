@@ -1,3 +1,4 @@
+from instantChat.models.message import TextMessage
 from flask import Response, json, request, jsonify
 from flask_restful import Resource, abort, reqparse
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -15,27 +16,41 @@ class ChatRooms(Resource):
         chatRooms = ChatRoomModel.objects
         return jsonify({'data': chatRooms})
 
+
+#################################################################################
     @jwt_required()
-    def post(self) -> Response:
+    def post(self, contact_id) -> Response: #accepts contact_id and chatroom data
 
         user = UserModel.objects.get(id=get_jwt_identity())
-        data = request.get_json()
-        membersList = [UserModel.objects(id=userId) for userId in data["members"]][0] #//whhy [0]? #mk
+        # data = request.get_json()
+        # membersList = [UserModel.objects(id=userId) for userId in data["members"]][0] #//whhy [0]? #mk
+        membersList = [user]
+        membersList.push(UserModel.Objects(id=contact_id))
         
         new = {
-            "name": data["name"],
-            "description": data["description"],
-            "owner": user,
+            # "name": data["name"],
+            # "description": data["description"],
+            # "owner": user,
             "members": membersList,
-            "privateMessaging": bool(data["privateMessaging"])
+            # "privateMessaging": bool(data["privateMessaging"])
+            # "privateMessaging": True
         }
         newChatRoom = ChatRoomModel(**new)
         newChatRoom.save()
+        newMessage = {
+                "message": "Private Chat Successfully Created!",
+                "chatroom": newChatRoom.id, #or just self? #q #tb
+                # "timestamp":  toDbDateFormat(timestamp),
+                "sender": user.id,
+                "receiver": contact_id
+        }
+        newMessage = TextMessage(**newMessage)
+        newMessage.save()
         # from instantChat.api_realtime import postChatRooms
         # postChatRooms(newChatRoom)
 
-        return jsonify({"data": newChatRoom})
-
+        return jsonify({"chatRoomObject": newChatRoom, "room_id":newChatRoom.id, "confirmationMessage": newMessage}) #obj, id, obj
+#################################################################################
 
 
 class ChatRoom(Resource):

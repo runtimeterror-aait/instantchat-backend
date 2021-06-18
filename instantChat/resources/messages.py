@@ -28,8 +28,7 @@ class Messages(Resource):
         textMessage.save()
         # from instantChat.api_realtime import postMessages
         # postMessages(textMessage)
-        return jsonify({'data': textMessage})
-
+        return jsonify(textMessage) #changed
 
 # class Messages(Resource):
 #     @jwt_required()
@@ -63,6 +62,7 @@ class Message(Resource):
         return jsonify({'data': messages})
 
 
+####################################################################
 def getRoomIDs(userID):
     '''get a list of all the ids of rooms the user is a member of'''
 
@@ -74,7 +74,7 @@ def getRoomIDs(userID):
 
 def getRecentMessage(roomIds):
     ''' gives a dictionary where the latest messages documents are values and the corresponding chat room names, the keys.'''
-    recentMessages = {}
+    recentMessages = []
 
                     # for room in ChatRoom.Objects:
                     #     room_ids.push(room.id)
@@ -87,6 +87,7 @@ def getRecentMessage(roomIds):
         if (message["chatroom"] not in recentMessages.keys()) and (message["chatroom"] in roomIds): #if chatroom not already accounted for and if the user is a member of it
             chatName = ChatRoom.Objects.get_or_404(id=message["chatroom"])["name"]
             recentMessages[chatName] = message;
+            recentMessages.push({"name": chatName,"message": message.message, "timestamp": message.timestamp, "chatroom": message.chatroom})
             # room_ids.push(message.chatroom) #there might be rooms with zero messages
     # recentMessages = {}; #db fetch... here #tbd
 
@@ -99,11 +100,11 @@ def getlastRoomMessages(roomID):
 class RecentMessages(Resource):
     @jwt_required
     def get(self) -> Response:
-        return jsonify({'data': getRecentMessage(getRoomIDs(get_jwt_identity()))})
+        return jsonify(getRecentMessage(getRoomIDs(get_jwt_identity())))
 
 class LastMessages(Resource):
     @jwt_required
     def get(self, room_id:str) -> Response:
-        return getlastRoomMessages(room_id)
+        return jsonify(getlastRoomMessages(room_id))
 
  

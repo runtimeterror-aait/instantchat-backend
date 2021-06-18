@@ -156,7 +156,11 @@ def online(data):
     room_ids = ["1","2"]
     lg(f'room_ids: {room_ids}')
     # recentMessages = getRecentMessage(room_ids); 
-    recentMessages = {"Games":{"message":"roar", "timestamp":"May 23, 21 3:54PM"}}
+    recentMessages = [
+        {"name":"Games","message":"roar", "timestamp":"May 23, 21 3:54PM", "chatroom":"324rt344"},
+        {"name":"Games","message":"roar", "timestamp":"May 23, 21 3:54PM", "chatroom":"324rt344"},
+        {"name":"Games","message":"roar", "timestamp":"May 23, 21 3:54PM", "chatroom":"324rt344"}
+    ]
     lg(f'recentMessages: {recentMessages}')
     emit('recentMessages', {"recentMessages":recentMessages}, broadcast = False, include_self = True); #include_self #tbch
 

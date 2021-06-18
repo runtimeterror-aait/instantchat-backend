@@ -9,9 +9,9 @@ from instantChat.models.user import User
 import time
 
 class ChatRoom(Document): #mk #could better this by making it inhert a room document, and make two childs - groupchat and privatechat
-    name = StringField() #chat room name 
-    description = StringField()
-    owner = ReferenceField(User)
+    # name = StringField() #chat room name 
+    # description = StringField()
+    # owner = ReferenceField(User)
     members = ListField(ReferenceField(User)) #Only twi if its private #including owner
     # membersCount = LongField() #to keep count of members #also userful to calc Popular Chat Rooms
     privateMessaging = BooleanField()
