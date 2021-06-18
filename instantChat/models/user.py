@@ -3,14 +3,16 @@ from mongoengine import Document, EmbeddedDocument
 from mongoengine.fields import *
 from flask import jsonify
 from flask_bcrypt import generate_password_hash, check_password_hash
+from flask_mongoengine import BaseQuerySet
 
 import re
-
+# print("================> START OF models user,py")  
 
 class PhoneField(StringField):
 
     REGEX = re.compile(r"/^(^\+251|^251|^0)?9\d{8}$/")
-
+    meta = {'queryset_class': BaseQuerySet}
+    
     def validate(self, value):
         # Overwrite StringField validate method to include regex phone number check.
         if not PhoneField.REGEX.match(string=value):
@@ -22,19 +24,17 @@ class PhoneField(StringField):
 class UserPhotos(EmbeddedDocument):
     imagePath = StringField()
     profilePicture = BooleanField(default=False)
-
-
+    meta = {'queryset_class': BaseQuerySet}
 class Contacts(EmbeddedDocument):
-    id = SequenceField()
-    name = StringField(required=True)
-    phone = PhoneField(required=True)
-    userId = StringField(required=True)
-
-
+    id = SequenceField() #? mk
+    # user_id = ReferenceField(User)
+    name = StringField(required=True);
+    phone = StringField(required=True); #unique=True
+    meta = {'queryset_class': BaseQuerySet}
 class User(Document):
     username = StringField(required=True, unique=True)
     email = EmailField(required=True, unique=True)
-    phone = PhoneField(required=True, unique=True)
+    phone = StringField(required=True, unique=True)
     password = StringField(required=True, min_length=6, regex=None)
     bio = StringField()
     online = BooleanField()
@@ -42,6 +42,8 @@ class User(Document):
     deactivate = BooleanField()
     profilePicture = ListField(EmbeddedDocumentField(UserPhotos))
     contacts = ListField(EmbeddedDocumentField(Contacts))
+    # contacts = ListField(ReferenceField(User)) #//slf-ref #
+    meta = {'queryset_class': BaseQuerySet}
 
     def generate_pw_hash(self):
         self.password = generate_password_hash(
