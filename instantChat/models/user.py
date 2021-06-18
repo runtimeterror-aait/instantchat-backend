@@ -28,6 +28,7 @@ class Contacts(EmbeddedDocument):
     id = SequenceField()
     name = StringField(required=True)
     phone = PhoneField(required=True)
+    userId = StringField(required=True)
 
 
 class User(Document):

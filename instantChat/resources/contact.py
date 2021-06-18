@@ -21,6 +21,14 @@ class ContactsResource(Resource):
     def post(self) -> Response:
         data = request.get_json()
         user = UserModel.objects.get(id=get_jwt_identity())
+
+        try:
+            checkUser = UserModel.objects(phone=data['phone'])
+            if(checkUser.count() == 0):
+                return jsonify({ "message": "The User doesn't exist in ichat" })
+        except:
+            return jsonify({ "message": "The User doesn't exist in ichat" })
+        data["userId"] = str(checkUser.first()['id'])
         contact = Contacts(**data)
         user.contacts.append(contact)
         user.save()
